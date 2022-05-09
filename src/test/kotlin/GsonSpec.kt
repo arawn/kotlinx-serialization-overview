@@ -30,6 +30,14 @@ class GsonSpec : FunSpec({
         val deserialized = gson.fromJson<List<Movie>>(serialized)
         deserialized shouldBe data
     }
+
+    test("역직렬화시 널을 허용하지 않는 속성에 널을 입력해도 예외가 발생하지 않아요") {
+        val deserialized = gson.fromJson<Movie>("""{"title":"foo","rating":null}""")
+
+        deserialized.title shouldBe "foo"
+        deserialized.director shouldBe null
+        deserialized.rating shouldBe 0.0
+    }
 })
 
 internal inline fun <reified T> Gson.fromJson(

@@ -1,13 +1,16 @@
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-@Suppress("BlockingMethodInNonBlockingContext")
+@Suppress("BlockingMethodInNonBlockingContext", "NAME_SHADOWING")
 class JacksonSpec : FunSpec({
 
-    val mapper = jacksonObjectMapper()
+    val mapper = JsonMapper.builder().addModule(kotlinModule()).build()
 
     test("객체를 JSON으로 직렬화 또는 역직렬화하기") {
         val data = Movie("foo", "x", 0.1)
@@ -32,5 +35,20 @@ class JacksonSpec : FunSpec({
         // val deserialized = mapper.readValue(serialized, object: TypeReference<List<Movie>>() {})
         val deserialized = mapper.readValue<List<Movie>>(serialized)
         deserialized shouldBe data
+    }
+
+    test("역직렬화시 널을 허용하지 않는 원시타입 속성에 널을 입력해도 예외가 발생하지 않아요") {
+        val deserialized = mapper.readValue<Movie>("""{"title":"foo","director":"x","rating":null}""")
+
+        deserialized.rating shouldBe 0.0
+    }
+
+    test("역직렬화시 널을 허용하지 않는 속성에 널이 입력되면 예외가 발생해요") {
+        val exception = shouldThrowExactly<MissingKotlinParameterException> {
+            mapper.readValue<Movie>("""{"title":"foo","rating":0.1}""")
+        }
+
+        exception.parameter.name shouldBe "director"
+        exception.parameter.type.classifier shouldBe String::class
     }
 })

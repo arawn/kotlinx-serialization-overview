@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 data class Movie(
     val title: String,
     val director: String,
-    val rating: Double? = 1.0
+    val rating: Double = 1.0
 )

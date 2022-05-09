@@ -1,4 +1,5 @@
-
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.kotlinModule
@@ -11,6 +12,23 @@ import io.kotest.matchers.shouldBe
 class JacksonSpec : FunSpec({
 
     val mapper = JsonMapper.builder().addModule(kotlinModule()).build()
+
+    test("데이터 클래스를 JSON으로 직렬화 또는 역직렬화하기") {
+        data class Project @JsonCreator constructor(
+            @JsonProperty("name") val name: String,
+            @JsonProperty("version") val version: Double
+        )
+
+        val mapper = JsonMapper.builder().build()
+        val data = Project("foo", 1.0)
+
+        val serialized = mapper.writeValueAsString(data)
+        serialized shouldBe """{"name":"foo","version":1.0}"""
+
+        val deserialized = mapper.readValue(serialized, Project::class.java)
+        deserialized.name shouldBe data.name
+        deserialized.version shouldBe data.version
+    }
 
     test("객체를 JSON으로 직렬화 또는 역직렬화하기") {
         val data = Movie("foo", "x", 0.1)

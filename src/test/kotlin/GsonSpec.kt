@@ -38,6 +38,12 @@ class GsonSpec : FunSpec({
         deserialized.director shouldBe null
         deserialized.rating shouldBe 0.0
     }
+
+    test("역직렬화시 기본 인자가 설정된 속성을 지원하지 않아요") {
+        val deserialized = gson.fromJson<Movie>("""{"title":"foo","director":"x"}""")
+
+        deserialized.rating shouldBe 0.0
+    }
 })
 
 internal inline fun <reified T> Gson.fromJson(

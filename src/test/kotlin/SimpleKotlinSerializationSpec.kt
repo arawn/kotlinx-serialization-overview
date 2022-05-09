@@ -48,4 +48,10 @@ class SimpleKotlinSerializationSpec : FunSpec({
         exception::class.simpleName shouldBe "MissingFieldException"
         exception.message shouldBe "Field 'director' is required for type with serial name 'Movie', but it was missing"
     }
+
+    test("역직렬화시 기본 인자가 설정된 속성을 지원해요") {
+        val deserialized = Json.decodeFromString<Movie>("""{"title":"foo","director":"x"}""")
+
+        deserialized.rating shouldBe 1.0
+    }
 })

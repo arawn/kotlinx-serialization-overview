@@ -69,4 +69,10 @@ class JacksonSpec : FunSpec({
         exception.parameter.name shouldBe "director"
         exception.parameter.type.classifier shouldBe String::class
     }
+
+    test("역직렬화시 기본 인자가 설정된 속성을 지원해요") {
+        val deserialized = mapper.readValue<Movie>("""{"title":"foo","director":"x"}""")
+
+        deserialized.rating shouldBe 1.0
+    }
 })

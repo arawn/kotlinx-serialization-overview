@@ -1,6 +1,7 @@
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -53,5 +54,18 @@ class SimpleKotlinSerializationSpec : FunSpec({
         val deserialized = Json.decodeFromString<Movie>("""{"title":"foo","director":"x"}""")
 
         deserialized.rating shouldBe 1.0
+    }
+
+    test("컴파일 타임에 직렬화 지원 여부를 확인해요") {
+        // @Serializable 애노테이션을 제거하면 컴파일 오류가 발생해요: Serializer has not been found for type 'User'
+        @Serializable
+        data class User(val userName: String)
+
+        @Serializable
+        data class Project(
+            val name: String,
+            val owner: User,
+            val language: String = "Kotlin"
+        )
     }
 })

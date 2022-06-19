@@ -33,9 +33,21 @@ kotlin {
     }
 
     js(IR) {
+        binaries.executable()
+        compilations.all {
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs.plus("-opt-in=kotlin.js.ExperimentalJsExport")
+                sourceMap = true
+            }
+        }
         browser {
             commonWebpackConfig {
-                cssSupport.enabled = true
+                cssSupport.enabled = false
+            }
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
             }
         }
     }

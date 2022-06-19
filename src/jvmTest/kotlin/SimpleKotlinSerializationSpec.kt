@@ -81,7 +81,9 @@ class SimpleKotlinSerializationSpec : FunSpec({
         val data = Movie("foo", "x", 0.1)
 
         val serialized = Cbor.encodeToByteArray(data)
-        serialized.toAsciiHexString() shouldBe "{BF}etitlecfoohdirectoraxfrating{FB}?{B9}{99}{99}{99}{99}{99}{9A}{FF}"
+        serialized.toAsciiHexString() shouldBe """
+        {BF}etitlecfoohdirectoraxfrating{FB}?{B9}{99}{99}{99}{99}{99}{9A}{FF}
+        """.trimIndent()
 
         val deserialized = Cbor.decodeFromByteArray<Movie>(serialized)
         deserialized shouldBe data
@@ -91,7 +93,9 @@ class SimpleKotlinSerializationSpec : FunSpec({
         val data = Movie("foo", "x", 0.1)
 
         val serialized = ProtoBuf.encodeToByteArray(data)
-        serialized.toAsciiHexString() shouldBe "{0A}{03}foo{12}{01}x{19}{9A}{99}{99}{99}{99}{99}{B9}?"
+        serialized.toAsciiHexString() shouldBe """
+        {0A}{03}foo{12}{01}x{19}{9A}{99}{99}{99}{99}{99}{B9}?
+        """.trimIndent()
 
         val deserialized = ProtoBuf.decodeFromByteArray<Movie>(serialized)
         deserialized shouldBe data

@@ -36,7 +36,7 @@ class SimpleKotlinSerializationSpec : FunSpec({
 
         exception::class.simpleName shouldBe "JsonDecodingException"
         exception.message shouldBe """
-        Unexpected JSON token at offset 43: Failed to parse type 'double' for input 'null'
+        Unexpected JSON token at offset 43: Failed to parse type 'double' for input 'null' at path: ${'$'}.rating
         JSON input: {"title":"foo","director":"x","rating":null}
         """.trimIndent()
     }
@@ -47,7 +47,9 @@ class SimpleKotlinSerializationSpec : FunSpec({
         }
 
         exception::class.simpleName shouldBe "MissingFieldException"
-        exception.message shouldBe "Field 'director' is required for type with serial name 'Movie', but it was missing"
+        exception.message shouldBe """
+        Field 'director' is required for type with serial name 'Movie', but it was missing at path: ${'$'}
+        """.trimIndent()
     }
 
     test("역직렬화시 기본 인자가 설정된 속성을 지원해요") {

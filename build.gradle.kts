@@ -13,11 +13,11 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
     implementation("com.google.code.gson:gson:2.9.0")
-    testImplementation("io.kotest:kotest-runner-junit5:5.3.0")
-    testImplementation("io.kotest:kotest-assertions-core:5.3.0")
+    testImplementation("io.kotest:kotest-runner-junit5:5.3.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.3.1")
 }
 
 group = "dev.springrunner"

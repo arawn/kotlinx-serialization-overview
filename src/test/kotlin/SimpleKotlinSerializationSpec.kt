@@ -1,12 +1,17 @@
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+@ExperimentalSerializationApi
 class SimpleKotlinSerializationSpec : FunSpec({
 
     test("객체를 JSON으로 직렬화 또는 역직렬화하기") {
@@ -70,4 +75,19 @@ class SimpleKotlinSerializationSpec : FunSpec({
             val language: String = "Kotlin"
         )
     }
+
+    test("객체를 CBOR 형식으로 직렬화 또는 역직렬화하기") {
+        val data = Movie("foo", "x", 0.1)
+
+        val serialized = Cbor.encodeToByteArray(data)
+        serialized.toAsciiHexString() shouldBe "{BF}etitlecfoohdirectoraxfrating{FB}?{B9}{99}{99}{99}{99}{99}{9A}{FF}"
+
+        val deserialized = Cbor.decodeFromByteArray<Movie>(serialized)
+        deserialized shouldBe data
+    }
 })
+
+fun ByteArray.toAsciiHexString() = joinToString("") {
+    if (it in 32..127) it.toInt().toChar().toString()
+    else "{${it.toUByte().toString(16).padStart(2, '0').uppercase()}}"
+}

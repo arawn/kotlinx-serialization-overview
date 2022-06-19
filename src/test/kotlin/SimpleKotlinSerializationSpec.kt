@@ -10,6 +10,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
 class SimpleKotlinSerializationSpec : FunSpec({
@@ -83,6 +84,16 @@ class SimpleKotlinSerializationSpec : FunSpec({
         serialized.toAsciiHexString() shouldBe "{BF}etitlecfoohdirectoraxfrating{FB}?{B9}{99}{99}{99}{99}{99}{9A}{FF}"
 
         val deserialized = Cbor.decodeFromByteArray<Movie>(serialized)
+        deserialized shouldBe data
+    }
+
+    test("객체를 ProtoBuf 형식으로 직렬화 또는 역직렬화하기") {
+        val data = Movie("foo", "x", 0.1)
+
+        val serialized = ProtoBuf.encodeToByteArray(data)
+        serialized.toAsciiHexString() shouldBe "{0A}{03}foo{12}{01}x{19}{9A}{99}{99}{99}{99}{99}{B9}?"
+
+        val deserialized = ProtoBuf.decodeFromByteArray<Movie>(serialized)
         deserialized shouldBe data
     }
 })

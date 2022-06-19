@@ -1,7 +1,8 @@
 plugins {
-    kotlin("multiplatform") version "1.7.0"
-    kotlin("plugin.serialization") version "1.7.0"
+    kotlin("multiplatform") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.21"
 
+    id("io.kotest.multiplatform") version "5.3.1"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
@@ -48,17 +49,23 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-        val jvmMain by getting {
+        val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.3.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3")
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+
+                implementation("io.kotest:kotest-framework-engine:5.3.1")
+                implementation("io.kotest:kotest-assertions-core:5.3.1")
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
                 implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
                 implementation("com.google.code.gson:gson:2.9.0")
             }
@@ -66,7 +73,6 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation("io.kotest:kotest-runner-junit5:5.3.1")
-                implementation("io.kotest:kotest-assertions-core:5.3.1")
             }
         }
         val jsMain by getting
